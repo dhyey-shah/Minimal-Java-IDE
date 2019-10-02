@@ -1,0 +1,12 @@
+my\java\editor\ui\CustomTextPaneBase.class
+my\java\editor\ui\listeners\DocumentListenerEvent.class
+my\java\editor\lexer\Lexer$Codes.class
+my\java\editor\ui\Layout.class
+my\java\editor\lexer\Lexer$Token.class
+my\java\editor\ui\LayoutFactory.class
+my\java\editor\ui\TextEditorPanel.class
+my\java\editor\lexer\LexerString.class
+my\java\editor\ui\CustomTextPane.class
+my\java\editor\lexer\Lexer.class
+my\java\editor\MinimalJavaIDE.class
+my\java\editor\ui\TextEditorPanel$LineNumber.class
