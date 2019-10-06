@@ -1,5 +1,6 @@
 package my.java.editor.ui.listeners;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.SwingUtilities;
@@ -10,6 +11,7 @@ import javax.swing.text.Document;
 import javax.swing.text.StyledDocument;
 
 import my.java.editor.lexer.Lexer;
+import my.java.editor.lexer.TokenParser;
 import my.java.editor.ui.CustomTextPane;
 import my.java.editor.ui.TextEditorPanel;
 
@@ -18,6 +20,7 @@ public class DocumentListenerEvent implements DocumentListener {
 	private CustomTextPane editorPane;
 	private TextEditorPanel.LineNumber lineNumber;
 	private Lexer lexer;
+	private TokenParser token;
 	private List<Lexer.Token<Lexer.Codes>> tokenStream;
 	private StyledDocument styledDoc;
 	private Document doc;
@@ -27,8 +30,14 @@ public class DocumentListenerEvent implements DocumentListener {
 
 		lineNumber = editorPanel.new LineNumber();
 
-		lexer = new Lexer();
-
+		token = new TokenParser();
+		lexer = new Lexer(false);
+		
+		List<ArrayList<String>> list = token.parseTokens();
+		
+		lexer.setKeywords(list.get(0));
+		lexer.setPrimitives(list.get(1));
+		
 		styledDoc = editorPane.getStyledDocument();
 		doc = editorPane.getDocument();
 	}
