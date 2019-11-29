@@ -8,18 +8,13 @@ public class Lexer {
 	private final List<String> keywords;
 	private final List<String> primitives;
 
-	public Lexer(boolean init) {
+	public Lexer() {
 		keywords = new ArrayList<>();
 		primitives = new ArrayList<>();
-		
-		if (init == true) {
-			initKeywords();
-			initPrimitives();
-		}
 	}
 
 	public static enum Codes {
-		KEYWORDS, PRIMITIVE, SEMI, EQU, IDENTIFIER, OPERATORS, NUMERIC;
+		KEYWORDS, PRIMITIVE, SEMI, EQU,TYPE, IDENTIFIER, OPERATORS, NUMERIC;
 	}
 
 	public static class Token<T> {
@@ -53,6 +48,14 @@ public class Lexer {
 			return e;
 		}
 
+		public T getCodes() {
+			return t;
+		}
+
+		public String getValue() {
+			return value;
+		}
+		
 		@Override
 		public String toString() {
 			return t.toString() + " " + String.valueOf(s);
@@ -67,20 +70,10 @@ public class Lexer {
 		primitives.addAll(list);
 	}
 	
-	public void initKeywords() {
-		keywords.add("abstract");
-		keywords.add("public");
-		keywords.add("private");
-		keywords.add("protected");
-		keywords.add("final");
+	public void setOperators(List<String> list) {
+		primitives.addAll(list);
 	}
-
-	public void initPrimitives() {
-		primitives.add("int");
-		primitives.add("float");
-		primitives.add("double");
-	}
-
+	
 	public Token<Codes> createToken(Codes c, String val) {
 		return new Token<Codes>(c, val);
 	}
