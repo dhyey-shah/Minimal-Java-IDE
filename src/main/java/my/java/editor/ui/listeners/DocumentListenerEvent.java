@@ -11,9 +11,9 @@ import javax.swing.text.Document;
 import javax.swing.text.Style;
 import javax.swing.text.StyledDocument;
 
-import my.java.editor.lexer.Lexer;
-import my.java.editor.lexer.TokenParser;
-import my.java.editor.parser.Parser;
+import my.java.editor.compiler.lexer.Lexer;
+import my.java.editor.compiler.lexer.TokenParser;
+import my.java.editor.compiler.parser.Parser;
 import my.java.editor.ui.CustomTextPane;
 import my.java.editor.ui.TextEditorPanel;
 

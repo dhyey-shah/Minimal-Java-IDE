@@ -1,8 +1,6 @@
-package my.java.editor.ast;
+package my.java.editor.compiler.ast;
 
-import my.java.editor.lexer.Lexer;
-
-public class DeclarationSyntaxTree<T extends Lexer.Codes> extends SyntaxTree {
+public class DeclarationSyntaxTree<T> extends SyntaxTree {
 	
 	private final String GOAL;
 	private Node<T> typeNode;

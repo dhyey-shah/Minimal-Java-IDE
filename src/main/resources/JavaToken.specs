@@ -10,7 +10,7 @@ keywords: {
 		static	strictfp	super
 	switch	synchronized	this	throw
 	throws	transient	try	void
-	volatile	while	 true	 false
+	volatile	while	 
 	null	
 }
 
@@ -23,4 +23,12 @@ operators: {
 	== != > >= < <=
 	&& || ?:
 	~ << >> >>> & ^ |
+}
+
+boolean: {
+	true false
+}
+
+special_keywords: {
+	null super this
 }

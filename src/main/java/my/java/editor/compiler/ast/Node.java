@@ -1,10 +1,8 @@
-package my.java.editor.ast;
+package my.java.editor.compiler.ast;
 
-import my.java.editor.lexer.Lexer;
-
-public class Node<T extends Lexer.Codes>{
-	public final T type;
-	public final String name;
+public class Node<T>{
+	private final T type;
+	private final String name;
 	
 	public Node<T> parent = null;
 	public Node<T> child = null;

@@ -1,4 +1,4 @@
-package my.java.editor.lexer;
+package my.java.editor.compiler.lexer;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -7,14 +7,19 @@ public class Lexer {
 
 	private final List<String> keywords;
 	private final List<String> primitives;
+	private final List<String> booleans;
+	private final List<String> specialKeywords;
 
 	public Lexer() {
 		keywords = new ArrayList<>();
 		primitives = new ArrayList<>();
+		booleans = new ArrayList<>();
+		specialKeywords = new ArrayList<>();
 	}
 
 	public static enum Codes {
-		KEYWORDS, PRIMITIVE, SEMI, EQU,TYPE, IDENTIFIER, OPERATORS, NUMERIC;
+		KEYWORDS, PRIMITIVE, SEMI, EQU, LPAREN, RPAREN, COMMA, IDENTIFIER, OPERATORS, NUMERIC, DOT, BOOLEANS,
+		LOGICAL_NOT, TILDE, SP_KEYWORDDS;
 	}
 
 	public static class Token<T> {
@@ -55,7 +60,7 @@ public class Lexer {
 		public String getValue() {
 			return value;
 		}
-		
+
 		@Override
 		public String toString() {
 			return t.toString() + " " + String.valueOf(s);
@@ -65,15 +70,23 @@ public class Lexer {
 	public void setKeywords(List<String> list) {
 		keywords.addAll(list);
 	}
-	
+
 	public void setPrimitives(List<String> list) {
 		primitives.addAll(list);
 	}
-	
+
 	public void setOperators(List<String> list) {
 		primitives.addAll(list);
 	}
-	
+
+	public void setBoolean(List<String> list) {
+		booleans.addAll(list);
+	}
+
+	public void setSpecialKeywords(List<String> list) {
+		specialKeywords.addAll(list);
+	}
+
 	public Token<Codes> createToken(Codes c, String val) {
 		return new Token<Codes>(c, val);
 	}
@@ -94,7 +107,14 @@ public class Lexer {
 			case ' ':
 				break;
 			case '+':
-				tokens.add(createToken(Codes.OPERATORS, "+"));
+				if (input.charAt(i + 1) == '+') {
+					tokens.add(createToken(Codes.OPERATORS, "++"));
+					i++;
+				} else if (input.charAt(i + 1) == '=') {
+					tokens.add(createToken(Codes.OPERATORS, "+="));
+					i++;
+				} else
+					tokens.add(createToken(Codes.OPERATORS, "+"));
 				break;
 			case '-':
 				tokens.add(createToken(Codes.OPERATORS, "-"));
@@ -108,6 +128,24 @@ public class Lexer {
 			case '=':
 				tokens.add(createToken(Codes.EQU, "="));
 				break;
+			case '(':
+				tokens.add(createToken(Codes.LPAREN, "("));
+				break;
+			case ')':
+				tokens.add(createToken(Codes.RPAREN, ")"));
+				break;
+			case ',':
+				tokens.add(createToken(Codes.COMMA, ","));
+				break;
+			case '.':
+				tokens.add(createToken(Codes.DOT, "."));
+				break;
+			case '!':
+				tokens.add(createToken(Codes.LOGICAL_NOT, "!"));
+				break;
+			case '~':
+				tokens.add(createToken(Codes.TILDE, "~"));
+				break;
 			case ';':
 				tokens.add(createToken(Codes.SEMI, ";"));
 				break;
@@ -115,7 +153,8 @@ public class Lexer {
 				if (Character.isLetter(currChar)) {
 					int startIndex = i, endIndex;
 					// System.out.println(i);
-					while (i < input.length() && Character.isLetter(input.charAt(i))) {
+					while (i < input.length()
+							&& (Character.isLetter(input.charAt(i)) || Character.isDigit(input.charAt(i)))) {
 						identifier += input.charAt(i++);
 					}
 
@@ -125,6 +164,13 @@ public class Lexer {
 					} else if (primitives.contains(identifier)) {
 						endIndex = i;
 						tokens.add(createToken(Codes.PRIMITIVE, identifier, startIndex, endIndex));
+
+					} else if (booleans.contains(identifier)) {
+						endIndex = i;
+						tokens.add(createToken(Codes.BOOLEANS, identifier, startIndex, endIndex));
+					} else if (specialKeywords.contains(identifier)) {
+						endIndex = i;
+						tokens.add(createToken(Codes.SP_KEYWORDDS, identifier, startIndex, endIndex));
 
 					} else {
 						endIndex = i;
@@ -136,6 +182,9 @@ public class Lexer {
 				} else if (Character.isDigit(currChar)) {
 					while (i < input.length() && Character.isDigit(input.charAt(i))) {
 						numVal += input.charAt(i++);
+						if (Character.isLetter(input.charAt(i))) {
+							System.out.println("Lexer: error token");
+						}
 					}
 					i--;
 					tokens.add(createToken(Codes.NUMERIC, numVal));

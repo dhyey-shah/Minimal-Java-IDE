@@ -1,4 +1,4 @@
-package my.java.editor.lexer;
+package my.java.editor.compiler.lexer;
 
 import java.io.BufferedReader;
 import java.io.File;
