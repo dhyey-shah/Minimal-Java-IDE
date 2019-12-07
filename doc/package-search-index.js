@@ -1,1 +1,1 @@
-packageSearchIndex = [{"l":"my.java.editor"},{"l":"my.java.editor.ast"},{"l":"my.java.editor.lexer"},{"l":"my.java.editor.parser"},{"l":"my.java.editor.ui"},{"l":"my.java.editor.ui.listeners"}]
+packageSearchIndex = [{"l":"my.java.editor"},{"l":"my.java.editor.compiler"},{"l":"my.java.editor.compiler.ast"},{"l":"my.java.editor.compiler.lexer"},{"l":"my.java.editor.compiler.parser"},{"l":"my.java.editor.ui"},{"l":"my.java.editor.ui.listeners"}]

@@ -116,13 +116,11 @@ public class Parser {
 	}
 
 	/*
-	 * TestingExprAST parseTestingExpr() { ExprAST expr1 = parseExpr(); if(expr1 ==
-	 * null) { return null; } else { token = getNextToken(); if(token.getCodes() ==
-	 * Lexer.CODES.BIN_OP) {
+	 * Grammer: numeric_expression ::= ( ( "-" | "++" | "--" ) expression ) | (
+	 * expression ( "++" | "--" ) ) | ( expression ( "+" | "+=" | "-" | "-=" | "*" |
+	 * "*=" | "/" | "/=" | "%" | "%=" ) expression ) 
 	 * 
-	 * } }
-	 * 
-	 * return null; }
+	 * return NumericAST; }
 	 */
 
 	NumericAST<? extends OpAST> parseNumericExpr() {

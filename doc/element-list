@@ -1,6 +1,7 @@
 my.java.editor
-my.java.editor.ast
-my.java.editor.lexer
-my.java.editor.parser
+my.java.editor.compiler
+my.java.editor.compiler.ast
+my.java.editor.compiler.lexer
+my.java.editor.compiler.parser
 my.java.editor.ui
 my.java.editor.ui.listeners
