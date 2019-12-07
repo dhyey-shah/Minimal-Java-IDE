@@ -4,7 +4,7 @@ keywords: {
 	do else enum
 	extends	final	finally
 	for	goto	if	implements
-	import	instanceof interface
+	import interface
 		native	new	package
 	private	protected	public	return
 		static	strictfp	super
@@ -30,5 +30,5 @@ boolean: {
 }
 
 special_keywords: {
-	null super this
+	null super this instanceof
 }

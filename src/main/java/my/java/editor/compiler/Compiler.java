@@ -11,7 +11,7 @@ public class Compiler {
 	public static void main(String args[]) {
 		Lexer lex = new Lexer();
 		TokenParser tok = new TokenParser();
-		Parser<Lexer.Token<Lexer.Codes>> parse = new Parser<>();
+		Parser parse = new Parser();
 		
 		List<ArrayList<String>> list = tok.parseTokens();
 
@@ -21,7 +21,7 @@ public class Compiler {
 		lex.setBoolean(list.get(3));
 		lex.setSpecialKeywords(list.get(4));
 		
-		parse.setTokenStream(lex.generateTokens("a(x,y)"));
+		parse.setTokenStream(lex.generateTokens("++x;x+y;"));
 		parse.parse();
 		
 	}

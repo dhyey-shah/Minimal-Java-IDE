@@ -3,48 +3,47 @@ package my.java.editor.compiler.parser;
 import java.util.ArrayList;
 import java.util.List;
 
-import my.java.editor.compiler.ast.ExprSyntaxTree;
-import my.java.editor.compiler.ast.Node;
-import my.java.editor.compiler.ast.NumericExprSyntaxTree;
-import my.java.editor.compiler.ast.SyntaxTree;
+import my.java.editor.compiler.ast.AST;
+import my.java.editor.compiler.ast.BinaryOpAST;
+import my.java.editor.compiler.ast.ExprAST;
+import my.java.editor.compiler.ast.IdentifierAST;
+import my.java.editor.compiler.ast.NumericAST;
+import my.java.editor.compiler.ast.OpAST;
+import my.java.editor.compiler.ast.TestingExprAST;
+import my.java.editor.compiler.ast.UnaryOpAST;
 import my.java.editor.compiler.lexer.Lexer;
 
 /**
  * @author Dhyey
  *
- * @param <T>
  */
-public class Parser<T extends Lexer.Token<Lexer.Codes>> {
+public class Parser {
 
-	private List<T> tokenStream;
-	private List<SyntaxTree> rootNodes;
-	private Lexer.Token<Lexer.Codes> token;
+	private List<Lexer.Token<Lexer.CODES>> tokenStream;
+	private List<AST> rootNodes;
+	private Lexer.Token<Lexer.CODES> token;
 	private int currTokenNum = -1;
 
 	public Parser() {
 		this(null);
 	}
 
-	public Parser(List<T> tokenStream) {
+	public Parser(List<Lexer.Token<Lexer.CODES>> tokenStream) {
 		if (tokenStream != null) {
 			setTokenStream(tokenStream);
 		}
 		rootNodes = new ArrayList<>();
 	}
 
-	public void setTokenStream(List<T> tokenStream) {
+	public void setTokenStream(List<Lexer.Token<Lexer.CODES>> tokenStream) {
 		this.tokenStream = tokenStream;
 	}
 
-	private T getNextToken() {
+	private Lexer.Token<Lexer.CODES> getNextToken() {
 		if (currTokenNum != tokenStream.size() - 1)
 			return tokenStream.get(++currTokenNum);
 		else
 			return null;
-	}
-
-	public Node<Lexer.Codes> createNode(Lexer.Codes c, String v) {
-		return new Node<Lexer.Codes>(c.PRIMITIVE, v);
 	}
 
 	public String syntaxError(String error) {
@@ -52,129 +51,149 @@ public class Parser<T extends Lexer.Token<Lexer.Codes>> {
 		return null;
 	}
 
-	/*
-	 * SyntaxTree parseNumericExpr() { SyntaxTree tree; Lexer.Token<Lexer.Codes>
-	 * tokenTemp = token; if (token.getCodes() == Lexer.Codes.OPERATORS) { tree =
-	 * parseExpr(); if (tree == null) { return null; } return new
-	 * NumericExprSyntaxTree<>(new
-	 * Node<Lexer.Codes>(tokenTemp.getCodes(),tokenTemp.getValue()), tree); } else
-	 * if((tree = parseExpr()) == null) { return null; } else { token =
-	 * getNextToken(); if(token.getCodes() == Lexer.Codes.OPERATORS) {
-	 * 
-	 * } }
-	 * 
-	 * 
-	 * return null; }
-	 * 
-	 * SyntaxTree parseExpr() { token = getNextToken();
-	 * 
-	 * return null; }
-	 * 
-	 *//**
-		 * ARGLIST := EXPRESSION { "," EXPRESSION }
-		 * 
-		 * @return Node
-		 */
+	public boolean checkSemi() {
+		try {
+			token = getNextToken();
+			if (token.getCodes() == Lexer.CODES.SEMI)
+				return true;
+			else {
+				syntaxError("Semicolon expected");
+				return false;
+			}
+		} catch (NullPointerException e) {
+			syntaxError("Semicolon expected");
+			return false;
+		}
+	}
 
-	/*
-	 * SyntaxTree parseArgExpr() {
-	 * 
-	 * token = getNextToken();
-	 * 
-	 * if (token.getCodes() != Lexer.Codes.RPAREN) { ArgsSyntaxTree<Lexer.Codes>
-	 * argsRoot = new ArgsSyntaxTree<>(); while (true) { token = getNextToken(); if
-	 * (token.getCodes() == Lexer.Codes.RPAREN) {
-	 * 
-	 * return argsRoot; } else if (token.getCodes() == Lexer.Codes.IDENTIFIER) {
-	 * argsRoot.addChild(new Node<Lexer.Codes>(token.getCodes(), token.getValue()));
-	 * } else if (token.getCodes() == Lexer.Codes.COMMA) { token = getNextToken(); }
-	 * else { syntaxError("Unexpected token: " + token.getCodes()); argsRoot = null;
-	 * // Garbage Collection break; } } }
-	 * 
-	 * return null; }
-	 * 
-	 *//**
-		 * IDENTIFIER := "a..z,$,_" { "a..z,$,_,0..9" }
-		 * 
-		 * called by
-		 * 
-		 * @return SyntaxTree
-		 * 
-		 *//*
-			 * SyntaxTree parseIdentifierExpr() { Lexer.Token<Lexer.Codes> tokenTemp =
-			 * token;
-			 * 
-			 * token = getNextToken(); Lexer.Codes code = token.getCodes();
-			 * 
-			 * SyntaxTree tree;
-			 * 
-			 * if (code == Lexer.Codes.LPAREN) { tree = parseArgExpr(); if (tree == null)
-			 * return null; if ((token = getNextToken()).getCodes() != Lexer.Codes.SEMI)
-			 * return null;
-			 * 
-			 * tree = new CallSyntaxTree<>(new Node<Lexer.Codes>(tokenTemp.getCodes(),
-			 * tokenTemp.getValue()), (ArgsSyntaxTree<Lexer.Codes>) tree); return tree; }
-			 * else if (code == Lexer.Codes.OPERATORS) {
-			 * 
-			 * } return null; }
-			 */
+	@SuppressWarnings("unchecked")
+	<T extends AST> T parseExpr() {
+		Lexer.CODES codes = token.getCodes();
+		if (codes == Lexer.CODES.BOOLEANS) { // Logical expr
 
-	ExprSyntaxTree<Lexer.Codes> parseExpr() {
-		token = getNextToken();
+		} else if (codes == Lexer.CODES.BIN_OP) { // Numeric Expr
 
-		Lexer.Codes codes = token.getCodes();
+		} else if (codes == Lexer.CODES.TILDE) { // BIT EXPR
 
-		if (codes == Lexer.Codes.BOOLEANS) { // Logical expr
+		} else if (codes == Lexer.CODES.SP_KEYWORDDS) { // EXPR
+			if (token.getValue() == "null") {
+				return (T) new ExprAST(ExprAST.VALUE.NULL);
+			} else if (token.getValue() == "super") {
+				return (T) new ExprAST(ExprAST.VALUE.SUPER);
+			} else if (token.getValue() == "this") {
+				return (T) new ExprAST(ExprAST.VALUE.THIS);
+			} else {
+				ExprAST a = new ExprAST(ExprAST.VALUE.INSTANCEOF);
 
-		} else if (codes == Lexer.Codes.OPERATORS) { // Numeric Expr
-
-		} else if (codes == Lexer.Codes.LOGICAL_NOT) { // LOGICAL Expr
-
-		} else if (codes == Lexer.Codes.TILDE) { // BIT EXPR
-
-		} else if (codes == Lexer.Codes.SP_KEYWORDDS) { // EXPR
-			
+				// TO BE ADDED
+			}
+		} else if (codes == Lexer.CODES.BOOLEANS) {
+			if (token.getValue() == "true") {
+				return (T) new ExprAST(ExprAST.VALUE.TRUE);
+			} else {
+				return (T) new ExprAST(ExprAST.VALUE.FALSE);
+			}
+		} else if (codes == Lexer.CODES.LPAREN) { // EXPR
+			token = getNextToken();
+			ExprAST expr = parseExpr();
+			if (expr == null) {
+				return null;
+			} else {
+				token = getNextToken();
+				if (token.getCodes() != Lexer.CODES.RPAREN) {
+					syntaxError("')' Expected " + token.getValue() + "given");
+					expr = null;
+					return null;
+				} else {
+					return (T) expr;
+				}
+			}
+		} else if (codes == Lexer.CODES.IDENTIFIER) { // EXPR
+			return (T) new IdentifierAST(token.getValue());
 		}
 
 		return null;
 	}
 
-	NumericExprSyntaxTree<Lexer.Codes> parseNumericExpr() {
-		token = getNextToken();
+	/*
+	 * TestingExprAST parseTestingExpr() { ExprAST expr1 = parseExpr(); if(expr1 ==
+	 * null) { return null; } else { token = getNextToken(); if(token.getCodes() ==
+	 * Lexer.CODES.BIN_OP) {
+	 * 
+	 * } }
+	 * 
+	 * return null; }
+	 */
 
-		if (token.getCodes() == Lexer.Codes.OPERATORS) {
-			Node<Lexer.Codes> a = createNode(token.getCodes(), token.getValue());
-			ExprSyntaxTree<Lexer.Codes> b = parseExpr();
-			if (b == null) {
-				a = null;
+	NumericAST<? extends OpAST> parseNumericExpr() {
+		OpAST op;
+		if (token.getCodes() == Lexer.CODES.UNARY_OP) {
+			op = new UnaryOpAST(token.getValue());
+
+			token = getNextToken();
+			AST expr = parseExpr();
+			if (expr == null) {
+				op = null;
 				return null;
-			} else
-				return new NumericExprSyntaxTree<>(a, b);
-		} else {
-			ExprSyntaxTree<Lexer.Codes> a = parseExpr();
-			if (a == null)
-				return null;
-			else {
-				NumericExprSyntaxTree<Lexer.Codes> b = parseNumericExpr();
-				if (b == null) {
-					a = null;
+			} else {
+				if (checkSemi()) {
+					System.out.println("UNARY AST CREATED");
+					return new NumericAST<OpAST>(expr, op, false);
+				}
+				else {
 					return null;
-				} else
-					return new NumericExprSyntaxTree<>(a, b);
+				}
+			}
+		} else {
+			AST expr = parseExpr();
+			if (expr == null) {
+				return null;
+			} else {
+				token = getNextToken();
+				if (token.getCodes() == Lexer.CODES.UNARY_OP) {
+					op = new UnaryOpAST(token.getValue());
+					return new NumericAST<OpAST>(expr, op, true);
+				} else if (token.getCodes() == Lexer.CODES.BIN_OP) {
+					op = new BinaryOpAST(token.getValue());
+					token = getNextToken();
+
+					AST expr2 = parseExpr();
+					if (expr2 == null) {
+						op = null;
+						expr = null;
+						return null;
+					} else {
+						if (checkSemi()) {
+							System.out.println("BINARY AST CREATED");
+							return new NumericAST<OpAST>(expr, op, expr2);
+						}
+						else {
+							return null;
+						}
+
+					}
+				} else {
+					expr = null;
+					return null;
+				}
 			}
 		}
 	}
 
 	public void parse() {
 		token = getNextToken();
-
+		AST ast;
 		while (token != null) {
-			if (token.getCodes() == Lexer.Codes.OPERATORS) {
-
-			} else if (token.getCodes() == Lexer.Codes.SEMI) {
+			if (token.getCodes() == Lexer.CODES.UNARY_OP) {
+				ast = parseNumericExpr();
+			} else if (token.getCodes() == Lexer.CODES.SEMI) {
 				token = getNextToken();
-			}
 
+			} else {
+				ast = parseNumericExpr();
+				
+			}
+			token = getNextToken();
 		}
 
 		System.out.println(rootNodes);

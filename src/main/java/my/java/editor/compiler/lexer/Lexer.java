@@ -17,9 +17,9 @@ public class Lexer {
 		specialKeywords = new ArrayList<>();
 	}
 
-	public static enum Codes {
-		KEYWORDS, PRIMITIVE, SEMI, EQU, LPAREN, RPAREN, COMMA, IDENTIFIER, OPERATORS, NUMERIC, DOT, BOOLEANS,
-		LOGICAL_NOT, TILDE, SP_KEYWORDDS;
+	public static enum CODES {
+		KEYWORDS, PRIMITIVE, SEMI, EQU, LPAREN, RPAREN, COMMA, IDENTIFIER, BIN_OP, NUMERIC, DOT, BOOLEANS,
+		 TILDE, SP_KEYWORDDS, UNARY_OP;
 	}
 
 	public static class Token<T> {
@@ -87,16 +87,16 @@ public class Lexer {
 		specialKeywords.addAll(list);
 	}
 
-	public Token<Codes> createToken(Codes c, String val) {
-		return new Token<Codes>(c, val);
+	public Token<CODES> createToken(CODES c, String val) {
+		return new Token<CODES>(c, val);
 	}
 
-	public Token<Codes> createToken(Codes c, String val, int s, int e) {
-		return new Token<Codes>(c, val, s, e);
+	public Token<CODES> createToken(CODES c, String val, int s, int e) {
+		return new Token<CODES>(c, val, s, e);
 	}
 
-	public List<Token<Codes>> generateTokens(String input) {
-		List<Token<Codes>> tokens = new ArrayList<>();
+	public List<Token<CODES>> generateTokens(String input) {
+		List<Token<CODES>> tokens = new ArrayList<>();
 		String identifier = "";
 		String numVal = "";
 
@@ -108,46 +108,46 @@ public class Lexer {
 				break;
 			case '+':
 				if (input.charAt(i + 1) == '+') {
-					tokens.add(createToken(Codes.OPERATORS, "++"));
+					tokens.add(createToken(CODES.UNARY_OP, "++"));
 					i++;
 				} else if (input.charAt(i + 1) == '=') {
-					tokens.add(createToken(Codes.OPERATORS, "+="));
+					tokens.add(createToken(CODES.BIN_OP, "+="));
 					i++;
 				} else
-					tokens.add(createToken(Codes.OPERATORS, "+"));
+					tokens.add(createToken(CODES.BIN_OP, "+"));
 				break;
 			case '-':
-				tokens.add(createToken(Codes.OPERATORS, "-"));
+				tokens.add(createToken(CODES.BIN_OP, "-"));
 				break;
 			case '*':
-				tokens.add(createToken(Codes.OPERATORS, "*"));
+				tokens.add(createToken(CODES.BIN_OP, "*"));
 				break;
 			case '/':
-				tokens.add(createToken(Codes.OPERATORS, "/"));
+				tokens.add(createToken(CODES.BIN_OP, "/"));
 				break;
 			case '=':
-				tokens.add(createToken(Codes.EQU, "="));
+				tokens.add(createToken(CODES.EQU, "="));
 				break;
 			case '(':
-				tokens.add(createToken(Codes.LPAREN, "("));
+				tokens.add(createToken(CODES.LPAREN, "("));
 				break;
 			case ')':
-				tokens.add(createToken(Codes.RPAREN, ")"));
+				tokens.add(createToken(CODES.RPAREN, ")"));
 				break;
 			case ',':
-				tokens.add(createToken(Codes.COMMA, ","));
+				tokens.add(createToken(CODES.COMMA, ","));
 				break;
 			case '.':
-				tokens.add(createToken(Codes.DOT, "."));
+				tokens.add(createToken(CODES.DOT, "."));
 				break;
 			case '!':
-				tokens.add(createToken(Codes.LOGICAL_NOT, "!"));
+				tokens.add(createToken(CODES.UNARY_OP, "!"));
 				break;
 			case '~':
-				tokens.add(createToken(Codes.TILDE, "~"));
+				tokens.add(createToken(CODES.TILDE, "~"));
 				break;
 			case ';':
-				tokens.add(createToken(Codes.SEMI, ";"));
+				tokens.add(createToken(CODES.SEMI, ";"));
 				break;
 			default:
 				if (Character.isLetter(currChar)) {
@@ -160,21 +160,21 @@ public class Lexer {
 
 					if (keywords.contains(identifier)) {
 						endIndex = i;
-						tokens.add(createToken(Codes.KEYWORDS, identifier, startIndex, endIndex));
+						tokens.add(createToken(CODES.KEYWORDS, identifier, startIndex, endIndex));
 					} else if (primitives.contains(identifier)) {
 						endIndex = i;
-						tokens.add(createToken(Codes.PRIMITIVE, identifier, startIndex, endIndex));
+						tokens.add(createToken(CODES.PRIMITIVE, identifier, startIndex, endIndex));
 
 					} else if (booleans.contains(identifier)) {
 						endIndex = i;
-						tokens.add(createToken(Codes.BOOLEANS, identifier, startIndex, endIndex));
+						tokens.add(createToken(CODES.BOOLEANS, identifier, startIndex, endIndex));
 					} else if (specialKeywords.contains(identifier)) {
 						endIndex = i;
-						tokens.add(createToken(Codes.SP_KEYWORDDS, identifier, startIndex, endIndex));
+						tokens.add(createToken(CODES.SP_KEYWORDDS, identifier, startIndex, endIndex));
 
 					} else {
 						endIndex = i;
-						tokens.add(createToken(Codes.IDENTIFIER, identifier, startIndex, endIndex));
+						tokens.add(createToken(CODES.IDENTIFIER, identifier, startIndex, endIndex));
 					}
 
 					identifier = "";
@@ -187,7 +187,7 @@ public class Lexer {
 						}
 					}
 					i--;
-					tokens.add(createToken(Codes.NUMERIC, numVal));
+					tokens.add(createToken(CODES.NUMERIC, numVal));
 				}
 			}
 		}

@@ -24,7 +24,7 @@ public class DocumentListenerEvent implements DocumentListener {
 	private Lexer lexer;
 	private Parser parser;
 	private TokenParser token;
-	private List<Lexer.Token<Lexer.Codes>> tokenStream;
+	private List<Lexer.Token<Lexer.CODES>> tokenStream;
 	private StyledDocument styledDoc;
 	private Document doc;
 //	private UpdateUI updateUI;
@@ -53,7 +53,7 @@ public class DocumentListenerEvent implements DocumentListener {
 //		updateUI = new UpdateUI();
 	}
 
-	public List<Lexer.Token<Lexer.Codes>> getTokenStram() {
+	public List<Lexer.Token<Lexer.CODES>> getTokenStram() {
 		return tokenStream;
 	}
 
@@ -93,19 +93,19 @@ public class DocumentListenerEvent implements DocumentListener {
 			} catch (BadLocationException ee) {
 			}
 
-			for (Lexer.Token<Lexer.Codes> token : tokenStream) {
+			for (Lexer.Token<Lexer.CODES> token : tokenStream) {
 				int s = token.getStartIndex();
 				int e = token.getEndIndex();
 
 				try {
 
-					if (token.t == Lexer.Codes.PRIMITIVE || token.t == Lexer.Codes.KEYWORDS) {
+					if (token.t == Lexer.CODES.PRIMITIVE || token.t == Lexer.CODES.KEYWORDS) {
 						updateDocumentList.add(new UpdateDocument(s, e - s, styledDoc.getStyle("keyword"), true));
 						//System.out.println(updateDocument.s+" "+updateDocument.e);
 
 					}
 
-					else if (token.t == Lexer.Codes.IDENTIFIER) {
+					else if (token.t == Lexer.CODES.IDENTIFIER) {
 						updateDocumentList.add(new UpdateDocument(s, e - s, styledDoc.getStyle("regular"), true));
 					}
 
